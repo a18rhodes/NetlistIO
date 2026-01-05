@@ -1,0 +1,22 @@
+{
+  "name": "NetlistIO Dev",
+  "build": {
+    "dockerfile": "Dockerfile"
+  },
+  "postCreateCommand": "./scripts/setup_data.sh",
+  "customizations": {
+    "vscode": {
+      "settings": {
+        "python.defaultInterpreterPath": ".venv/bin/python",
+        "editor.formatOnSave": true
+      },
+      "extensions": [
+        "ms-python.python",
+        "ms-python.vscode-pylance",
+        "njpwerner.autodocstring",
+        "tamasfe.even-better-toml"
+      ]
+    }
+  },
+  "remoteUser": "root"
+}

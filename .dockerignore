@@ -1,0 +1,24 @@
+# --- Version Control ---
+.git
+.gitignore
+
+# --- Dependencies & Environment ---
+# Never copy the local venv; let Docker build its own
+.venv
+
+# --- Python Cache ---
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+
+# --- IDE ---
+.vscode
+.idea
+
+# --- Tests & Data ---
+# If building a production image, you don't need the massive test sets
+tests/data/
+.pytest_cache/
+.coverage
+htmlcov/
