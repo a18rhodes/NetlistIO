@@ -12,7 +12,10 @@
       },
       "extensions": [
         "ms-python.python",
+        "ms-toolsai.jupyter",
         "ms-python.vscode-pylance",
+        "ms-python.black-formatter",
+        "my-python.pylint",
         "njpwerner.autodocstring",
         "tamasfe.even-better-toml"
       ]

@@ -146,6 +146,9 @@ class SpiceNetlist(Netlist):
             children=self._top_instances,
         )
 
+    def subckt(self, name: str):
+        return self.macro(name=name)
+
     top_subckt = top  # Alias for SPICE terminology
 
 

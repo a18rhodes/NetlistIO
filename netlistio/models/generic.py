@@ -191,8 +191,8 @@ class Netlist(_NamedItem):
     :param _top_instances: Instances at the top level (no parent).
     """
 
-    primitives: list[Primitive] = field(default_factory=list)
-    macros: list[Macro] = field(default_factory=list)
+    primitives: dict[str, Primitive] = field(default_factory=dict)
+    macros: dict[str, Macro] = field(default_factory=dict)
     _top_instances: list[Instance] = field(default_factory=list)
 
     @property
@@ -203,7 +203,7 @@ class Netlist(_NamedItem):
         :return: List of all Cell objects in the netlist.
         """
 
-        return [*self.primitives, *self.macros, *self._top_instances]
+        return [*self.primitives.values(), *self.macros.values(), *self._top_instances]
 
     @property
     @abc.abstractmethod
@@ -217,10 +217,10 @@ class Netlist(_NamedItem):
     def write(self, stream: TextIO, indent: int = 0):
         super(Netlist, self).write(stream=stream, indent=indent)
         stream.write(self._format_with_indent(indent=indent, value="Primitives:\n"))
-        for primitive in self.primitives:
+        for primitive in self.primitives.values():
             primitive.write(stream=stream, indent=indent + 1)
         stream.write(self._format_with_indent(indent=indent, value="Macros:\n"))
-        for macro in self.macros:
+        for macro in self.macros.values():
             macro.write(stream=stream, indent=indent + 1)
         stream.write(self._format_with_indent(indent=indent, value="Top-Level Instances:\n"))
         stream.write(self._format_with_indent(indent=indent + 1, value="(virtual top)\n"))

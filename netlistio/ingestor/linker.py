@@ -42,7 +42,10 @@ def link(parse_result: ParseResult, model_registry: ModelRegistry, netlist_class
     primitives = _collect_primitives(instances)
     top_instances = [inst for inst in instances if inst.parent is None]
     netlist = netlist_class(
-        name=Path(parse_result.filepath).name, primitives=primitives, macros=sorted_macros, _top_instances=top_instances
+        name=Path(parse_result.filepath).name,
+        primitives={primitive.name: primitive for primitive in primitives},
+        macros={macro.name: macro for macro in sorted_macros},
+        _top_instances=top_instances,
     )
     return LinkResult(netlist=netlist, errors=errors, top_instances=top_instances)
 
