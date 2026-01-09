@@ -18,6 +18,10 @@ RUN apt-get update && apt-get install -y \
     && rm -rf /var/lib/apt/lists/*
 
 
+RUN git clone https://github.com/a18rhodes/dotfiles.git
+
+RUN /root/dotfiles/install.sh
+
 RUN curl -sSL https://install.python-poetry.org | python3 -
 ENV PATH="$POETRY_HOME/bin:$PATH"
 
@@ -28,5 +32,6 @@ WORKDIR /workspaces/NetlistIO
 RUN poetry config virtualenvs.create false
 
 COPY pyproject.toml poetry.lock README.md ./
+RUN poetry lock
 RUN poetry install --no-root
 RUN git config --global --add safe.directory /workspaces/NetlistIO
