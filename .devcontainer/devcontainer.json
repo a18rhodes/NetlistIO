@@ -4,7 +4,7 @@
     "dockerfile": "Dockerfile",
     "context": "..",
     "args": {
-      "GIT_USERNAME": "${loacalEnv:GITHUB_USER}",
+      "GIT_USERNAEM": "${localEnv:GITHUB_USER}",
       "GIT_EMAIL": "${localEnv:GITHUB_USER}@gmail.com"
     }
   },
