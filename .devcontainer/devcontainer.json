@@ -8,7 +8,6 @@
       "GIT_EMAIL": "${localEnv:GITHUB_USER}@gmail.com"
     }
   },
-  "post"
   "postCreateCommand": "./scripts/setup_data.sh",
   "customizations": {
     "vscode": {
