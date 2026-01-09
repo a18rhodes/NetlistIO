@@ -30,5 +30,3 @@ RUN poetry config virtualenvs.create false
 COPY pyproject.toml poetry.lock README.md ./
 RUN poetry install --no-root
 RUN git config --global --add safe.directory /workspaces/NetlistIO
-RUN git config --global user.email "${GIT_EMAIL}"
-RUN git config --global user.name "${GIT_USERNAME}"
