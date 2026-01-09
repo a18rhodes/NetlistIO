@@ -2,11 +2,11 @@
   "name": "NetlistIO Dev",
   "build": {
     "dockerfile": "Dockerfile",
-    "context": "..",
-    "containerEnv": {
-        "GIT_AUTHOR_NAME": "${localEnv:GIT_AUTHOR_NAME}",
-        "GIT_AUTHOR_EMAIL": "${localEnv:GIT_AUTHOR_EMAIL}"
-    }
+    "context": ".."
+  },
+  "containerEnv": {
+    "GIT_AUTHOR_NAME": "${localEnv:GIT_AUTHOR_NAME}",
+    "GIT_AUTHOR_EMAIL": "${localEnv:GIT_AUTHOR_EMAIL}"
   },
   "postCreateCommand": "./scripts/setup_data.sh",
   "customizations": {
