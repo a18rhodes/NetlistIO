@@ -121,11 +121,12 @@ class Macro(Cell):
     Represents a hierarchical subcircuit definition.
 
     :param ports: Ordered interface ports for the subcircuit.
-    :param children: Instances contained within this subcircuit.
+    :param children: Contents (Instances, Models, etc.) within this subcircuit.
     """
 
     ports: tuple[Port, ...] = field(default_factory=tuple)
-    children: list["Instance"] = field(default_factory=list)
+    # Changed from list[Instance] to list[Cell] to allow nested .models
+    children: list[Cell] = field(default_factory=list)
 
     def write(self, stream: TextIO, indent: int = 0):
         super(Macro, self).write(stream=stream, indent=indent)

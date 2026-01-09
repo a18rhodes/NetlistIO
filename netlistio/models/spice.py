@@ -7,8 +7,8 @@ and SPICE-specific netlist representations (Subckt, SpiceNetlist).
 
 import abc
 import functools
-from dataclasses import dataclass
-from typing import ClassVar
+from dataclasses import dataclass, field
+from typing import ClassVar, TextIO
 
 from netlistio.models.generic import Cell, Macro, Netlist, Port, Primitive
 
@@ -21,6 +21,7 @@ __all__ = [
     "PMOS",
     "Diode",
     "Subckt",
+    "Model",
     "SpiceNetlist",
     "COMMENT_inst_prefixES",
 ]
@@ -122,6 +123,25 @@ class Subckt(Macro, _SpicePrimitiveMixin):
     """SPICE subcircuit definition (.SUBCKT)."""
 
     inst_prefix: ClassVar[str] = "X"
+
+
+@dataclass(slots=True)
+class Model(Cell):
+    """
+    Represents a .model directive.
+
+    Example: .model my_nmos nmos level=54
+    name: "my_nmos"
+    base_type: "nmos"
+    params: {"level": "54"}
+    """
+    base_type: str
+    params: dict[str, str] = field(default_factory=dict)
+
+    def write(self, stream: TextIO, indent: int = 0):
+        super(Model, self).write(stream=stream, indent=indent)
+        value = f"Base Type: {self.base_type}\nParams: {self.params}\n"
+        stream.write(self._format_with_indent(indent=indent + 1, value=value))
 
 
 @dataclass

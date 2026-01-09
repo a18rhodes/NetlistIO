@@ -15,7 +15,7 @@ from pathlib import Path
 from typing import Iterable, Iterator
 
 from netlistio.ingestor.common import open_mmap
-from netlistio.models.generic import Cell, Instance
+from netlistio.models.generic import Cell, Instance, Macro
 from netlistio.models.parsing import (
     IncludeDirective,
     ParseError,
@@ -145,18 +145,35 @@ class ChunkParser:
         """
         cells = []
         includes = []
-        macro = None
+        macro: Macro | None = None
+
         for line in self:
             if not line:
                 continue
-            if line_macro := self.line_parser.parse_declaration(line):
-                macro = line_macro
+
+            # Handle declarations (Subckts, Models)
+            if decl := self.line_parser.parse_declaration(line):
+                if isinstance(decl, Macro):
+                    # It's a container (e.g., .subckt), this region defines it
+                    macro = decl
+                elif macro:
+                    # It's an atomic decl inside a macro (e.g., .model inside .subckt)
+                    macro.children.append(decl)
+                else:
+                    # It's a global atomic decl (e.g., .model at top level)
+                    cells.append(decl)
+
+            # Handle Includes
             elif include_info := self.line_parser.parse_include(line):
                 includes.append(include_info)
+
+            # Handle Instances
             elif instance := self.line_parser.parse_instance(line):
                 if macro:
                     macro.children.append(instance)
-                cells.append(instance)
+                else:
+                    cells.append(instance)
+
         if macro:
             return ParseResult(
                 filepath=self.region.filepath, cells=[macro], errors=self.line_parser.errors, includes=includes

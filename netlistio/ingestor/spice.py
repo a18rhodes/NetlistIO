@@ -17,6 +17,7 @@ from netlistio.ingestor.scanner import ScanStrategy
 from netlistio.models.generic import Instance, Port
 from netlistio.models.parsing import IncludeDirective, LibraryDirective, ParseRegion
 from netlistio.models.spice import (
+    Model,
     Subckt,
     get_definition_from_prefix,
     passive_registry,
@@ -30,18 +31,20 @@ __all__ = [
 ]
 
 _SUBCKT = ".SUBCKT"
+_MODEL = ".MODEL"
 
 RE_SUBCKT = re.compile(
     rf"^\s*(?P<delimiter>\{_SUBCKT.lower()})\s+(?P<name>[^\s]+)".encode("utf-8"),
+    re.IGNORECASE | re.MULTILINE,
+)
+RE_MODEL = re.compile(
+    rf"^\s*(?P<delimiter>\{_MODEL.lower()})\s+(?P<name>\S+)\s+(?P<type>\S+)\s*(?P<params>.*)$".encode("utf-8"),
     re.IGNORECASE | re.MULTILINE,
 )
 RE_ENDS = re.compile(
     rb"^\s*\.ends",
     re.IGNORECASE | re.MULTILINE,
 )
-# Handles both quoted (allows spaces) and unquoted (no spaces) paths.
-# Group 'q_filename' captures quoted paths (without quotes).
-# Group 'u_filename' captures unquoted paths.
 RE_LIB_DIRECTIVE = re.compile(
     rb"^\s*\.lib\s+(?:[\"'](?P<q_filename>[^\"']+)[\"']|(?P<u_filename>[^\s]+))(?:\s+(?P<section>[^\s]+))?\s*$",
     re.IGNORECASE | re.MULTILINE,
@@ -180,30 +183,36 @@ class SpiceLineParser(LineParser):
             definition_cls = get_definition_from_prefix(name_token[0])
         except ValueError:
             return None
+
+        # Parse params and nets
         params = {}
         nets = []
         definition_name = None
+
         # Passive handling (R, C, L often have value as last token)
         if _is_passive_primitive(definition_cls):
             definition_name = definition_cls.name
             # If the last token is a value (digits), move it to params
             if tokens and self._is_value(tokens[-1]):
                 params["value"] = tokens.pop()
-        # Last-positional-token heuristic for others (X, M)
+
+        # Use helper to extract key=value params
+        self._extract_params(tokens, params)
+
+        # Remaining tokens are nets or model name
         for token in reversed(tokens):
-            if "=" in token:
-                k, v = token.split("=", 1)
-                params[k] = v
-            elif definition_name is None:
+            if definition_name is None:
                 # The last non-param token is the Model/Subckt Name
                 definition_name = token
             else:
                 # Everything else is a net
                 nets.append(token)
+
         # Nets were collected in reverse
         nets.reverse()
         # Map nets list to dictionary (keys only)
         nets_dict = dict.fromkeys(nets)
+
         if issubclass(definition_cls, Subckt):
             return Instance(
                 name=name_token,
@@ -217,6 +226,21 @@ class SpiceLineParser(LineParser):
             params=params,
             definition=definition_cls(),  # Primitive instance
         )
+
+    def _extract_params(self, tokens: list[str], params: dict[str, str]) -> None:
+        """
+        Extract key=value parameters from a list of tokens in-place.
+        Modified tokens list will have params removed.
+        """
+        # Iterate backwards to safely pop
+        i = len(tokens) - 1
+        while i >= 0:
+            token = tokens[i]
+            if "=" in token:
+                k, v = token.split("=", 1)
+                params[k] = v
+                tokens.pop(i)
+            i -= 1
 
     def _is_value(self, token: str) -> bool:
         """Simple check if token is numeric."""
@@ -232,13 +256,38 @@ class SpiceLineParser(LineParser):
         :param line: Logical line string.
         :return: Cell object or None if line is not a declaration.
         """
-        if RE_SUBCKT.search(line.encode("utf-8")):
+        line_bytes = line.encode("utf-8")
+
+        # Check for .SUBCKT
+        if RE_SUBCKT.search(line_bytes):
             tokens = line.split()
             if len(tokens) >= 2:
                 _, name, *ports = tokens
                 # Filter out params from ports list
                 ports = [p for p in ports if "=" not in p]
                 return Subckt(name=name, ports=tuple(Port(p) for p in ports))
+
+        # Check for .MODEL
+        if match := RE_MODEL.search(line_bytes):
+            name = match.group("name").decode("utf-8", errors="ignore")
+            base_type = match.group("type").decode("utf-8", errors="ignore")
+            params_str = match.group("params").decode("utf-8", errors="ignore")
+
+            # Parse parameters string
+            params = {}
+            if params_str:
+                # Normalize = spaces and split
+                cleaned_params = _RE_EQUALS_NORM.sub("=", params_str)
+                for token in cleaned_params.split():
+                    if "=" in token:
+                        k, v = token.split("=", 1)
+                        params[k] = v
+                    else:
+                         # Handle valueless flags or errors gracefully
+                        params[token] = "true"
+
+            return Model(name=name, base_type=base_type, params=params)
+
         return None
 
     def parse_include(self, line: str):
