@@ -5,7 +5,7 @@
     "context": "..",
     "args": {
       "GIT_USERNAME": "${localEnv:GITHUB_USER}",
-      "GIT_EMAIL": "${localEnv:GITHUB_USER}@gmail.com"
+      "GIT_EMAIL": "${localEnv:GITHUB_EMAIL}"
     }
   },
   "postCreateCommand": "./scripts/setup_data.sh",
