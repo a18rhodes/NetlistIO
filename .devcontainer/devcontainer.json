@@ -3,9 +3,9 @@
   "build": {
     "dockerfile": "Dockerfile",
     "context": "..",
-    "args": {
-      "GIT_USERNAME": "${localEnv:GITHUB_USER}",
-      "GIT_EMAIL": "${localEnv:GITHUB_EMAIL}"
+    "containerEnv": {
+        "GIT_AUTHOR_NAME": "${localEnv:GIT_AUTHOR_NAME}",
+        "GIT_AUTHOR_EMAIL": "${localEnv:GIT_AUTHOR_EMAIL}"
     }
   },
   "postCreateCommand": "./scripts/setup_data.sh",
