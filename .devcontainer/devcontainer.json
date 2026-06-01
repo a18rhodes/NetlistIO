@@ -1,29 +1,42 @@
 {
   "name": "NetlistIO Dev",
   "build": {
-    "dockerfile": "Dockerfile",
-    "context": ".."
+    "dockerfile": "../Dockerfile",
+    "context": "..",
+    "target": "development",
+    "args": {
+      "WORKDIR": "/workspaces/NetlistIO"
+    }
   },
   "containerEnv": {
-    "GIT_AUTHOR_NAME": "${localEnv:GIT_AUTHOR_NAME}",
-    "GIT_AUTHOR_EMAIL": "${localEnv:GIT_AUTHOR_EMAIL}"
+    "DOTFILES_PROJECT_ROOT": "${containerWorkspaceFolder}"
   },
-  "postCreateCommand": "./scripts/setup_data.sh",
+  "dotfiles": {
+    "repository": "https://github.com/a18rhodes/dotfiles",
+    "targetPath": "~/dotfiles",
+    "installCommand": "~/dotfiles/install.sh"
+  },
+  "postCreateCommand": "chmod +x scripts/setup_data.sh && ./scripts/setup_data.sh && poetry install",
+  "postAttachCommand": "sudo sed -i '/^GIT_AUTHOR_/d' /etc/environment 2>/dev/null || true",
   "customizations": {
     "vscode": {
       "settings": {
-        "editor.formatOnSave": true
+        "editor.formatOnSave": true,
+        "python.defaultInterpreterPath": "/workspaces/NetlistIO/.venv/bin/python"
       },
       "extensions": [
         "ms-python.python",
         "ms-toolsai.jupyter",
         "ms-python.vscode-pylance",
         "ms-python.black-formatter",
-        "my-python.pylint",
+        "ms-python.pylint",
         "njpwerner.autodocstring",
-        "tamasfe.even-better-toml"
+        "tamasfe.even-better-toml",
+        "anthropic.claude-code"
       ]
     }
   },
-  "remoteUser": "root"
+  "remoteUser": "vscode",
+  "workspaceMount": "source=${localWorkspaceFolder},target=/workspaces/NetlistIO,type=bind,consistency=cached",
+  "workspaceFolder": "/workspaces/NetlistIO"
 }

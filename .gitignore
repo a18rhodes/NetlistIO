@@ -26,6 +26,7 @@ htmlcov/
 # --- IDEs & Editors ---
 # Ignore local workspace settings, but keep shared extensions recommendations
 .vscode/*
+.cursor/*
 !.vscode/extensions.json
 !.vscode/launch.json
 !.vscode/tasks.json
@@ -43,6 +44,8 @@ tests/data/*
 !tests/data/synthetic/**
 *.net
 *.log
+notes/*
+.claude/*
 
 # --- Private Injections (Dotfiles) ---
 # Ensure your private prompt rules never get committed
