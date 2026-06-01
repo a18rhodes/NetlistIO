@@ -8,7 +8,7 @@ packages = [{ include = "netlistio" }]
 license = "Apache-2.0"
 
 [tool.poetry.dependencies]
-python = "~3.11"
+python = "^3.11"
 click = "^8.3.1"
 networkx = "^3.6.1"
 matplotlib = { version = "^3.8", optional = true }
@@ -24,6 +24,9 @@ mypy = "^1.19.1"
 types-networkx = "^3.6.1.20251220"
 jupyter = "^1.1.1"
 ipykernel = "^7.1.0"
+python-semantic-release = "^9.0"
+matplotlib = "^3.8"
+pydot = "^3.0"
 
 [tool.poetry.extras]
 viz = ["matplotlib", "pydot"]
@@ -41,6 +44,32 @@ profile = "black"
 [tool.pylint.format]
 max-line-length = 120
 
+[tool.pylint.design]
+min-public-methods = 1
+max-args = 7
+max-attributes = 10
+max-positional-arguments = 7
+
+[tool.pylint.messages_control]
+disable = [
+    "R1725",   # super-with-arguments: mandatory for Python 3.11 @dataclass(slots=True) compat
+]
+
+[tool.poetry.scripts]
+netlistio = "netlistio.cli:cli"
+
 [tool.pytest.ini_options]
 testpaths = ["tests"]
-addopts = "--cov=netlistio --cov-report=term-missing"
+# Coverage is opt-in to keep the default dev iteration fast; CI runs:
+#   pytest --cov=netlistio --cov-report=term-missing --cov-fail-under=100
+markers = [
+    "integration: requires external data from scripts/setup_data.sh (run with --integration)",
+]
+
+[tool.semantic_release]
+version_toml = ["pyproject.toml:tool.poetry.version"]
+branch = "main"
+changelog_file = "CHANGELOG.md"
+build_command = "poetry build"
+upload_to_vcs_release = true
+upload_to_pypi = false
