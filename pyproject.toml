@@ -8,7 +8,7 @@ packages = [{ include = "netlistio" }]
 license = "Apache-2.0"
 
 [tool.poetry.dependencies]
-python = "^3.11"
+python = "~3.11"
 click = "^8.3.1"
 networkx = "^3.6.1"
 matplotlib = { version = "^3.8", optional = true }
