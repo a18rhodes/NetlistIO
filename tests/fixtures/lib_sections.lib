@@ -1,0 +1,10 @@
+* Process corner library with .lib/.endl sections
+.lib tt
+.model nmos_tt nmos level=54 vth0=0.5 tox=7e-9
+.model pmos_tt pmos level=54 vth0=-0.5 tox=7e-9
+.endl tt
+
+.lib ff
+.model nmos_ff nmos level=54 vth0=0.4 tox=6.5e-9
+.model pmos_ff pmos level=54 vth0=-0.4 tox=6.5e-9
+.endl ff
