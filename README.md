@@ -1,54 +1,56 @@
 # NetlistIO
 
-A high-performance, parallel SPICE netlist parser and graph pipeline built for EDA tooling and machine learning workflows.
+Parallel SPICE netlist parser with a bipartite graph builder and PyTorch Geometric export.
 
-NetlistIO ingests arbitrarily large SPICE netlists — including deeply nested subcircuit hierarchies with `.lib` corner files — and produces a fully linked, hierarchical object model. From there, a bipartite net/instance graph can be exported as a PyTorch Geometric `HeteroData` object, ready for use in graph neural networks.
+NetlistIO reads SPICE netlists, including multi-file hierarchies resolved through `.include` and `.lib` directives, and produces a linked object model. From that model you can build a bipartite net/instance graph and export it as a `HeteroData` object for graph neural network workflows.
 
-## Why
+## Motivation
 
-Existing SPICE parsers are either slow, single-threaded, incomplete in their handling of the `.lib`/`.include` include graph, or Python wrappers around C tools that are difficult to extend. NetlistIO is written from the ground up to be fast, correct, and structured around clean abstractions that make adding new format support (Verilog, SPEF) straightforward.
-
-The end goal is a GNN-based circuit topology classifier trained on open-source analog and digital corpora (SKY130, OpenCores, AnalogGenie). NetlistIO is the data pipeline — the part every project like this needs but nobody publishes. See [Architecture](docs/architecture.md) for the full technical design and roadmap.
+This is the data pipeline layer for a GNN-based circuit topology classifier. The target corpora are SKY130 standard cells, OpenCores gate-level Verilog, and open analog datasets (AnalogGenie, AMSNet). See [docs/architecture.md](docs/architecture.md) for the full design and roadmap.
 
 ## Features
 
-- **Parallel parsing**: Files are memory-mapped and split into independently parseable byte-range regions. A worker pool processes regions concurrently, then results are merged.
-- **Recursive include resolution**: The compiler resolves `.include`, `.lib file section`, Cadence `[! ...]` / `[? ...]` directives iteratively, de-duplicating regions already visited.
-- **Hierarchical linking**: Tree-shaking from top-level instances, topological sort of subcircuit definitions, cycle detection.
-- **MOSFET type inference**: NMOS/PMOS classification from model name heuristics before `.model` linking.
-- **Bipartite graph**: Net and instance nodes; port connections as edges. Connectivity analysis and Graphviz/matplotlib rendering included.
-- **PyG export**: `to_pyg()` projects the graph to a `HeteroData` object with one-hot instance features and fanout net features.
-- **Extensible**: `ScanStrategy`, `LineParser`, `ChunkParser`, `LibraryProcessor` are abstract base classes. Adding a new format is a matter of implementing those four interfaces.
+- Memory-maps input files and splits them into independently parseable byte ranges, then dispatches those ranges to a worker pool.
+- Resolves the include graph iteratively: `.include`, `.lib file section`, and Cadence `[! ...]` / `[? ...]` variants. Already-visited regions are deduplicated to prevent infinite loops on circular includes.
+- Links instances to definitions: tree-shaking from top-level instances, topological sort, cycle detection.
+- Infers NMOS/PMOS type from model name before `.model` resolution.
+- Builds a bipartite net/instance graph. Each net and each device instance is a node; each terminal connection is an edge. Terminal roles (gate, drain, source, bulk) are encoded as edge features.
+- Exports to `HeteroData` via `to_pyg()`. Instance features are one-hot over model vocabulary; net features encode fanout and net type (port/signal/power/ground); edge features are one-hot over terminal name. The representation matches the bipartite multigraph used in GANA (Kunal et al., DATE 2020).
+- `ScanStrategy`, `LineParser`, `ChunkParser`, and `LibraryProcessor` are abstract base classes. Adding a new format means implementing those four interfaces.
 
 ## Installation
 
-Requires Python 3.11.
-
-```bash
-pip install netlistio
-```
-
-With visualization support (Graphviz + matplotlib):
-
-```bash
-pip install "netlistio[viz]"
-```
-
-With PyTorch Geometric (CPU):
-
-```bash
-pip install netlistio
-pip install torch --index-url https://download.pytorch.org/whl/cpu
-pip install torch_geometric
-```
-
-For development:
+Not yet on PyPI. Install from source:
 
 ```bash
 git clone https://github.com/a18rhodes/NetlistIO
 cd NetlistIO
 poetry install
 ```
+
+PyTorch and PyTorch Geometric require a separate install step because they are distributed from a custom wheel index that Poetry cannot target per-package:
+
+```bash
+# CUDA 12.4
+poetry run pip install torch --index-url https://download.pytorch.org/whl/cu124
+poetry run pip install torch_geometric
+
+# CPU only
+poetry run pip install torch --index-url https://download.pytorch.org/whl/cpu
+poetry run pip install torch_geometric
+```
+
+## Example output
+
+Five-transistor OTA from the [ALIGN benchmark suite](https://github.com/ALIGN-analoglayout/ALIGN-public).
+
+**Bipartite graph** (net nodes left, device nodes right — the DS/GNN view):
+
+![Five-transistor OTA bipartite graph](docs/img/five_transistor_ota_bipartite.png)
+
+**Device projection** (instance-only, edge width = number of shared nets — the EE view):
+
+![Five-transistor OTA device graph](docs/img/five_transistor_ota_device.png)
 
 ## Usage
 
@@ -59,22 +61,19 @@ from netlistio import SpiceReader
 
 netlist = SpiceReader().read("path/to/top.sp")
 
-# Iterate subcircuits
 for name, subckt in netlist.macros.items():
-    instances = list(subckt.instances)
-    print(f"{name}: {len(instances)} instances")
+    print(f"{name}: {len(list(subckt.instances))} instances")
 
-# Build the bipartite graph and export to PyG
 from netlistio.graph_analysis import CircuitGraph
 
-cg = CircuitGraph.from_netlist(netlist)
+cg = CircuitGraph.from_macro(netlist.macros["my_ota"])
 data = cg.to_pyg()   # torch_geometric.data.HeteroData
 ```
 
 ### CLI
 
 ```bash
-# Show scanner output — parse regions discovered in a file
+# Scanner output: byte-range regions discovered in the file
 netlistio regions top.sp
 
 # Parse, link, and summarize
@@ -83,13 +82,11 @@ netlistio parse top.sp
 # Full linked tree dump
 netlistio dump top.sp
 
-# Connectivity statistics for the bipartite graph
+# Connectivity statistics
 netlistio graph top.sp --stats
 
-# Render the graph (requires viz extras)
+# Render the graph (requires matplotlib)
 netlistio graph top.sp --output topology.svg
-
-# Scope to a specific subcircuit
 netlistio graph top.sp --subckt my_ota --output ota.png
 
 # Export a PyG HeteroData file
@@ -97,21 +94,11 @@ netlistio to-pyg top.sp output.pt
 netlistio to-pyg top.sp output.pt --subckt my_ota
 ```
 
-Use `-v` / `-vv` to raise log verbosity, `-q` to suppress warnings.
+Use `-v` / `-vv` for verbose logging, `-q` to suppress warnings.
 
-## Technical Design
+## Status
 
-See [docs/architecture.md](docs/architecture.md) for a detailed walkthrough of the parsing pipeline, include graph resolution, linking, bipartite graph construction, and the planned GNN classifier.
-
-## Project Status
-
-The core parser, linker, and graph builder are complete. Active work:
-
-- `to_pyg()` implementation (complete, requires `torch_geometric`)
-- Structural Verilog parser (planned)
-- GNN classifier training pipeline (planned)
-
-See [notes/plan.md](notes/plan.md) for the full roadmap.
+Core parser, linker, and graph builder are complete with 100% test coverage. Structural validation against ALIGN benchmark circuits (Kunal et al., DATE 2020) confirms the bipartite graph representation. Structural Verilog parser and GNN training pipeline are planned. See [docs/architecture.md](docs/architecture.md).
 
 ## License
 
