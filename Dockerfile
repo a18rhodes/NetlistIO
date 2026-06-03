@@ -49,7 +49,7 @@ FROM dependencies AS development
 COPY . .
 RUN poetry lock && poetry install --only-root --no-interaction
 RUN git config --system --add safe.directory /workspaces/NetlistIO \
-    && chown -R vscode:vscode ${WORKDIR}
+    && chown -R vscode:vscode ${WORKDIR} /opt/poetry-venvs
 USER vscode
 
 FROM dependencies AS production
