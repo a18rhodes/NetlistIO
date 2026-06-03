@@ -18,7 +18,6 @@ Tests run only when --integration is passed to pytest.
 from pathlib import Path
 
 import pytest
-import torch
 
 from netlistio.graph_analysis.circuit_graph import (
     _NET_TYPE_NAMES,
@@ -26,6 +25,8 @@ from netlistio.graph_analysis.circuit_graph import (
     CircuitGraph,
 )
 from netlistio.ingestor.reader import SpiceReader
+
+torch = pytest.importorskip("torch", reason="torch not installed")
 
 ALIGN = Path(__file__).parent.parent / "fixtures" / "align"
 _OTHER_IDX = list(_TERMINAL_VOCAB).index("other")
