@@ -22,7 +22,7 @@
     "vscode": {
       "settings": {
         "editor.formatOnSave": true,
-        "python.defaultInterpreterPath": "/workspaces/NetlistIO/.venv/bin/python"
+        "python.defaultInterpreterPath": "/opt/venv/bin/python"
       },
       "extensions": [
         "ms-python.python",

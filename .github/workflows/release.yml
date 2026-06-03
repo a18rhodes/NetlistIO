@@ -4,7 +4,8 @@ on:
   push:
     branches: [main]
 
-# Only run one release at a time; cancel in-progress if a new commit lands.
+# Only run one release at a time; cancel-in-progress: false ensures a queued
+# release is not silently dropped if another commit lands immediately after.
 concurrency:
   group: release
   cancel-in-progress: false
@@ -36,8 +37,17 @@ jobs:
       - name: Install dependencies
         run: poetry install --with dev
 
-      - name: Run CI checks before release
-        run: poetry run pytest -x -q
+      - name: Lint (pylint)
+        run: poetry run pylint netlistio tests --fail-under=10
+
+      - name: Run unit and fixture tests
+        run: poetry run pytest --cov=netlistio --cov-report=term-missing --cov-fail-under=100 -v
+
+      - name: Fetch integration dataset
+        run: bash scripts/setup_data.sh
+
+      - name: Run integration tests
+        run: poetry run pytest --integration -v
 
       - name: Semantic Release
         env:
