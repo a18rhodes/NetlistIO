@@ -37,6 +37,11 @@ jobs:
       - name: Install dependencies
         run: poetry install --with dev
 
+      - name: Install PyTorch (CPU)
+        run: |
+          poetry run pip install torch --index-url https://download.pytorch.org/whl/cpu
+          poetry run pip install torch_geometric
+
       - name: Lint (pylint)
         run: poetry run pylint netlistio tests --fail-under=10
 

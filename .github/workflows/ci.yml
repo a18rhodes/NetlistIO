@@ -35,10 +35,15 @@ jobs:
         uses: actions/cache@v4
         with:
           path: .venv
-          key: venv-${{ runner.os }}-${{ matrix.python-version }}-${{ hashFiles('poetry.lock') }}
+          key: venv-${{ runner.os }}-${{ matrix.python-version }}-${{ hashFiles('poetry.lock') }}-torch-cpu
 
       - name: Install dependencies
         run: poetry install --with dev
+
+      - name: Install PyTorch (CPU)
+        run: |
+          poetry run pip install torch --index-url https://download.pytorch.org/whl/cpu
+          poetry run pip install torch_geometric
 
       - name: Format check (black)
         run: poetry run black --check . tests
@@ -83,10 +88,15 @@ jobs:
         uses: actions/cache@v4
         with:
           path: .venv
-          key: venv-${{ runner.os }}-3.11-${{ hashFiles('poetry.lock') }}
+          key: venv-${{ runner.os }}-3.11-${{ hashFiles('poetry.lock') }}-torch-cpu
 
       - name: Install dependencies
         run: poetry install --with dev
+
+      - name: Install PyTorch (CPU)
+        run: |
+          poetry run pip install torch --index-url https://download.pytorch.org/whl/cpu
+          poetry run pip install torch_geometric
 
       - name: Fetch integration dataset
         run: bash scripts/setup_data.sh
