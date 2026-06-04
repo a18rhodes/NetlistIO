@@ -1,6 +1,6 @@
 """End-to-end integration tests against external datasets.
 
-These tests require the SymBench SPICE dataset cloned via scripts/setup_data.sh.
+These tests require the vsdsram_sky130 SPICE dataset cloned via scripts/setup_data.sh.
 Run with: pytest --integration
 """
 
@@ -13,14 +13,14 @@ import pytest
 
 from netlistio.ingestor.reader import SpiceReader
 
-DATA_DIR = Path(__file__).parent / "data" / "foundry"
+DATA_DIR = Path(__file__).parent / "data" / "foundry" / "sram"
 
 
 @pytest.mark.integration
-class TestSymBenchDataset:
+class TestFoundrySRAM:
     def _all_spice_files(self):
         if not DATA_DIR.exists():
-            pytest.skip("SymBench data not available — run scripts/setup_data.sh")
+            pytest.skip("SRAM foundry data not available — run scripts/setup_data.sh")
         return sorted(DATA_DIR.rglob("*.sp")) + sorted(DATA_DIR.rglob("*.spice"))
 
     def test_dataset_present(self):
@@ -29,7 +29,7 @@ class TestSymBenchDataset:
     def test_all_files_parse_without_exception(self):
         reader = SpiceReader()
         files = self._all_spice_files()
-        assert files, "No .sp files found in SymBench dataset"
+        assert files, "No SPICE files found in foundry/sram dataset"
         failures = []
         for sp_file in files[:50]:
             try:
@@ -39,8 +39,8 @@ class TestSymBenchDataset:
         assert not failures, f"Parse failures: {failures}"
 
     def test_parsed_netlists_have_macros_or_top_instances(self):
-        # Model-only library files (.param + .include chains) legitimately produce
-        # no subcircuits. Assert that the majority of files have parseable content.
+        # Simulation testbench files (.tran setups) legitimately produce no
+        # subcircuits — assert that the majority of files have parseable content.
         reader = SpiceReader()
         files = self._all_spice_files()[:20]
         with_content = 0

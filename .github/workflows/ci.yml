@@ -7,7 +7,7 @@ on:
     branches: [main]
   schedule:
     # Nightly integration run at 02:00 UTC — catches regressions against the
-    # external SymBench dataset without blocking every push/PR.
+    # external vsdsram_sky130 dataset without blocking every push/PR.
     - cron: "0 2 * * *"
 
 jobs:

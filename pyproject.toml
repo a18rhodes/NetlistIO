@@ -42,9 +42,14 @@ build-backend = "poetry.core.masonry.api"
 
 [tool.black]
 line-length = 120
+extend-exclude = "tests/data"
 
 [tool.isort]
 profile = "black"
+skip_glob = ["tests/data/**"]
+
+[tool.pylint.main]
+ignore-paths = ["tests/data"]
 
 [tool.pylint.format]
 max-line-length = 120
@@ -65,6 +70,7 @@ netlistio = "netlistio.cli:cli"
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+norecursedirs = ["tests/data", ".venv", ".git"]
 # Coverage is opt-in to keep the default dev iteration fast; CI runs:
 #   pytest --cov=netlistio --cov-report=term-missing --cov-fail-under=100
 markers = [
