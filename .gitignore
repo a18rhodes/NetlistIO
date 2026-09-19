@@ -50,3 +50,6 @@ notes/*
 # --- Private Injections (Dotfiles) ---
 # Ensure your private prompt rules never get committed
 .github/copilot-instructions.md
+
+
+.devcontainer/personal/*
