@@ -25,20 +25,21 @@ Not yet on PyPI. Install from source:
 ```bash
 git clone https://github.com/a18rhodes/NetlistIO
 cd NetlistIO
-poetry install
+poetry install                      # core only
+poetry install --extras pyg         # + CPU torch + torch_geometric
 ```
 
-PyTorch and PyTorch Geometric require a separate install step because they are distributed from a custom wheel index that Poetry cannot target per-package:
+For GPU (CUDA) builds, reinstall torch after the `--extras pyg` step:
 
 ```bash
 # CUDA 12.4
 poetry run pip install torch --index-url https://download.pytorch.org/whl/cu124
-poetry run pip install torch_geometric
 
-# CPU only
-poetry run pip install torch --index-url https://download.pytorch.org/whl/cpu
-poetry run pip install torch_geometric
+# CUDA 11.8
+poetry run pip install torch --index-url https://download.pytorch.org/whl/cu118
 ```
+
+`torch_geometric` stays as-is regardless of CUDA variant.
 
 ## Example output
 

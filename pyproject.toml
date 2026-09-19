@@ -13,6 +13,8 @@ click = "^8.3.1"
 networkx = "^3.6.1"
 matplotlib = { version = "^3.8", optional = true }
 pydot = { version = "^3.0", optional = true }
+torch = { version = ">=2.0", source = "pytorch-cpu", optional = true }
+torch_geometric = { version = ">=2.0", optional = true }
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^9.0"
@@ -32,9 +34,12 @@ pydot = "^3.0"
 
 [tool.poetry.extras]
 viz = ["matplotlib", "pydot"]
-# torch and torch-geometric are installed via pip in the Dockerfile due to the
-# custom PyTorch CPU wheel index; they are listed here for documentation only.
-pyg = []
+pyg = ["torch", "torch_geometric"]
+
+[[tool.poetry.source]]
+name = "pytorch-cpu"
+url = "https://download.pytorch.org/whl/cpu"
+priority = "explicit"
 
 [build-system]
 requires = ["poetry-core"]
