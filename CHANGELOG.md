@@ -1,6 +1,251 @@
 # CHANGELOG
 
 
+## v0.1.1 (2026-09-19)
+
+### Bug Fixes
+
+- Parse_include str/bytes decode round-trip ([#25](https://github.com/a18rhodes/NetlistIO/pull/25),
+  [`d6e283c`](https://github.com/a18rhodes/NetlistIO/commit/d6e283cbc5064c7631a4e8efd7f5ad76f17dcc43))
+
+### Chores
+
+- **deps**: Bump pillow from 12.2.0 to 12.3.0
+  ([`3534cdc`](https://github.com/a18rhodes/NetlistIO/commit/3534cdcd7d7dcb471b1ee303e8041bcea2b576b7))
+
+Bumps [pillow](https://github.com/python-pillow/Pillow) from 12.2.0 to 12.3.0. - [Release
+  notes](https://github.com/python-pillow/Pillow/releases) -
+  [Changelog](https://github.com/python-pillow/Pillow/blob/main/CHANGES.rst) -
+  [Commits](https://github.com/python-pillow/Pillow/compare/12.2.0...12.3.0)
+
+--- updated-dependencies: - dependency-name: pillow dependency-version: 12.3.0
+
+dependency-type: indirect ...
+
+Signed-off-by: dependabot[bot] <support@github.com>
+
+- **deps-dev**: Bump anyio from 4.13.0 to 4.14.2
+  ([`fe9ac01`](https://github.com/a18rhodes/NetlistIO/commit/fe9ac0132ecd31ac380bde856e32287c79d8a5ed))
+
+Bumps [anyio](https://github.com/agronholm/anyio) from 4.13.0 to 4.14.2. - [Release
+  notes](https://github.com/agronholm/anyio/releases) -
+  [Commits](https://github.com/agronholm/anyio/compare/4.13.0...4.14.2)
+
+--- updated-dependencies: - dependency-name: anyio dependency-version: 4.14.2
+
+dependency-type: indirect ...
+
+Signed-off-by: dependabot[bot] <support@github.com>
+
+- **deps-dev**: Bump bleach from 6.3.0 to 6.4.0
+  ([`f375e37`](https://github.com/a18rhodes/NetlistIO/commit/f375e3784861f83cc1c57ed4333836f37798188f))
+
+Bumps [bleach](https://github.com/mozilla/bleach) from 6.3.0 to 6.4.0. -
+  [Changelog](https://github.com/mozilla/bleach/blob/main/CHANGES) -
+  [Commits](https://github.com/mozilla/bleach/compare/v6.3.0...v6.4.0)
+
+--- updated-dependencies: - dependency-name: bleach dependency-version: 6.4.0
+
+dependency-type: indirect ...
+
+Signed-off-by: dependabot[bot] <support@github.com>
+
+- **deps-dev**: Bump gitpython from 3.1.50 to 3.1.52
+  ([`9ce202a`](https://github.com/a18rhodes/NetlistIO/commit/9ce202a25fc49be1ef5702a399daf7ae16b5f39e))
+
+Bumps [gitpython](https://github.com/gitpython-developers/GitPython) from 3.1.50 to 3.1.52. -
+  [Release notes](https://github.com/gitpython-developers/GitPython/releases) -
+  [Changelog](https://github.com/gitpython-developers/GitPython/blob/main/CHANGES) -
+  [Commits](https://github.com/gitpython-developers/GitPython/compare/3.1.50...3.1.52)
+
+--- updated-dependencies: - dependency-name: gitpython dependency-version: 3.1.52
+
+dependency-type: indirect ...
+
+Signed-off-by: dependabot[bot] <support@github.com>
+
+- **deps-dev**: Bump gitpython from 3.1.52 to 3.1.54
+  ([`b1b8184`](https://github.com/a18rhodes/NetlistIO/commit/b1b818469a6e0ab4d999565ccb5c5259ceaf3075))
+
+Bumps [gitpython](https://github.com/gitpython-developers/GitPython) from 3.1.52 to 3.1.54. -
+  [Release notes](https://github.com/gitpython-developers/GitPython/releases) -
+  [Changelog](https://github.com/gitpython-developers/GitPython/blob/main/CHANGES) -
+  [Commits](https://github.com/gitpython-developers/GitPython/compare/3.1.52...3.1.54)
+
+--- updated-dependencies: - dependency-name: gitpython dependency-version: 3.1.54
+
+dependency-type: indirect ...
+
+Signed-off-by: dependabot[bot] <support@github.com>
+
+- **deps-dev**: Bump gitpython from 3.1.54 to 3.1.58
+  ([`39af961`](https://github.com/a18rhodes/NetlistIO/commit/39af961a1538950aa7ac4f959712346399334aa9))
+
+Bumps [gitpython](https://github.com/gitpython-developers/GitPython) from 3.1.54 to 3.1.58. -
+  [Release notes](https://github.com/gitpython-developers/GitPython/releases) -
+  [Changelog](https://github.com/gitpython-developers/GitPython/blob/main/CHANGES) -
+  [Commits](https://github.com/gitpython-developers/GitPython/compare/3.1.54...3.1.58)
+
+--- updated-dependencies: - dependency-name: gitpython dependency-version: 3.1.58
+
+dependency-type: indirect ...
+
+Signed-off-by: dependabot[bot] <support@github.com>
+
+- **deps-dev**: Bump gitpython from 3.1.58 to 3.1.59
+  ([`181a1b4`](https://github.com/a18rhodes/NetlistIO/commit/181a1b4e94e1fb831a5c78ec7b4dd8e0715b7f99))
+
+Bumps [gitpython](https://github.com/gitpython-developers/GitPython) from 3.1.58 to 3.1.59. -
+  [Release notes](https://github.com/gitpython-developers/GitPython/releases) -
+  [Changelog](https://github.com/gitpython-developers/GitPython/blob/main/CHANGES) -
+  [Commits](https://github.com/gitpython-developers/GitPython/compare/3.1.58...3.1.59)
+
+--- updated-dependencies: - dependency-name: gitpython dependency-version: 3.1.59
+
+dependency-type: indirect ...
+
+Signed-off-by: dependabot[bot] <support@github.com>
+
+- **deps-dev**: Bump jupyter-server from 2.19.0 to 2.20.0
+  ([`4c148e0`](https://github.com/a18rhodes/NetlistIO/commit/4c148e08297e32612f61f2d0b8b564ccf93b016d))
+
+Bumps [jupyter-server](https://github.com/jupyter-server/jupyter_server) from 2.19.0 to 2.20.0. -
+  [Release notes](https://github.com/jupyter-server/jupyter_server/releases) -
+  [Changelog](https://github.com/jupyter-server/jupyter_server/blob/main/CHANGELOG.md) -
+  [Commits](https://github.com/jupyter-server/jupyter_server/compare/v2.19.0...v2.20.0)
+
+--- updated-dependencies: - dependency-name: jupyter-server dependency-version: 2.20.0
+
+dependency-type: indirect ...
+
+Signed-off-by: dependabot[bot] <support@github.com>
+
+- **deps-dev**: Bump jupyterlab from 4.5.7 to 4.5.9
+  ([`4170bda`](https://github.com/a18rhodes/NetlistIO/commit/4170bda734785f27a643ba1d90dd5244d542e17b))
+
+--- updated-dependencies: - dependency-name: jupyterlab dependency-version: 4.5.9
+
+dependency-type: indirect ...
+
+Signed-off-by: dependabot[bot] <support@github.com>
+
+- **deps-dev**: Bump jupyterlab from 4.5.9 to 4.5.10
+  ([`acc007e`](https://github.com/a18rhodes/NetlistIO/commit/acc007ee55d2a15e7fd6118c6d923c5937e42010))
+
+Bumps [jupyterlab](https://github.com/jupyterlab/jupyterlab) from 4.5.9 to 4.5.10. - [Release
+  notes](https://github.com/jupyterlab/jupyterlab/releases) -
+  [Changelog](https://github.com/jupyterlab/jupyterlab/blob/main/RELEASE.md) -
+  [Commits](https://github.com/jupyterlab/jupyterlab/compare/@jupyterlab/lsp@4.5.9...@jupyterlab/lsp@4.5.10)
+
+--- updated-dependencies: - dependency-name: jupyterlab dependency-version: 4.5.10
+
+dependency-type: indirect ...
+
+Signed-off-by: dependabot[bot] <support@github.com>
+
+- **deps-dev**: Bump mistune from 3.2.1 to 3.3.0
+  ([`4a8cb99`](https://github.com/a18rhodes/NetlistIO/commit/4a8cb99c4d725a71c7982ef78989111dd04a95ad))
+
+Bumps [mistune](https://github.com/lepture/mistune) from 3.2.1 to 3.3.0. - [Release
+  notes](https://github.com/lepture/mistune/releases) -
+  [Changelog](https://github.com/lepture/mistune/blob/main/docs/changes.rst) -
+  [Commits](https://github.com/lepture/mistune/compare/v3.2.1...v3.3.0)
+
+--- updated-dependencies: - dependency-name: mistune dependency-version: 3.3.0
+
+dependency-type: indirect ...
+
+Signed-off-by: dependabot[bot] <support@github.com>
+
+- **deps-dev**: Bump mistune from 3.3.0 to 3.3.3
+  ([`3ae2351`](https://github.com/a18rhodes/NetlistIO/commit/3ae23519e4e62d8794e378694caf40e3a29c4fbc))
+
+Bumps [mistune](https://github.com/lepture/mistune) from 3.3.0 to 3.3.3. - [Release
+  notes](https://github.com/lepture/mistune/releases) -
+  [Changelog](https://github.com/lepture/mistune/blob/main/docs/changes.rst) -
+  [Commits](https://github.com/lepture/mistune/compare/v3.3.0...v3.3.3)
+
+--- updated-dependencies: - dependency-name: mistune dependency-version: 3.3.3
+
+dependency-type: indirect ...
+
+Signed-off-by: dependabot[bot] <support@github.com>
+
+- **deps-dev**: Bump setuptools from 82.0.1 to 83.0.0
+  ([`96647e3`](https://github.com/a18rhodes/NetlistIO/commit/96647e3ec658836430da5b9fcbf145198ed6936c))
+
+Bumps [setuptools](https://github.com/pypa/setuptools) from 82.0.1 to 83.0.0. - [Release
+  notes](https://github.com/pypa/setuptools/releases) -
+  [Changelog](https://github.com/pypa/setuptools/blob/main/NEWS.rst) -
+  [Commits](https://github.com/pypa/setuptools/compare/v82.0.1...v83.0.0)
+
+--- updated-dependencies: - dependency-name: setuptools dependency-version: 83.0.0
+
+dependency-type: indirect ...
+
+Signed-off-by: dependabot[bot] <support@github.com>
+
+- **deps-dev**: Bump soupsieve from 2.8.4 to 2.9
+  ([`d01ff68`](https://github.com/a18rhodes/NetlistIO/commit/d01ff680b3d7be2c178047830521924b121dd180))
+
+Bumps [soupsieve](https://github.com/facelessuser/soupsieve) from 2.8.4 to 2.9. - [Release
+  notes](https://github.com/facelessuser/soupsieve/releases) -
+  [Commits](https://github.com/facelessuser/soupsieve/compare/2.8.4...2.9)
+
+--- updated-dependencies: - dependency-name: soupsieve dependency-version: '2.9'
+
+dependency-type: indirect ...
+
+Signed-off-by: dependabot[bot] <support@github.com>
+
+- **deps-dev**: Bump tornado from 6.5.6 to 6.5.7
+  ([`f953ea7`](https://github.com/a18rhodes/NetlistIO/commit/f953ea709e0b7ae110a914c70ab17920ee3ec21a))
+
+Bumps [tornado](https://github.com/tornadoweb/tornado) from 6.5.6 to 6.5.7. -
+  [Changelog](https://github.com/tornadoweb/tornado/blob/master/docs/releases.rst) -
+  [Commits](https://github.com/tornadoweb/tornado/compare/v6.5.6...v6.5.7)
+
+--- updated-dependencies: - dependency-name: tornado dependency-version: 6.5.7
+
+dependency-type: indirect ...
+
+Signed-off-by: dependabot[bot] <support@github.com>
+
+- **deps-dev**: Bump tornado from 6.5.7 to 6.5.8
+  ([`687b4a6`](https://github.com/a18rhodes/NetlistIO/commit/687b4a678462d667d1d191d4724e068110884d1c))
+
+Bumps [tornado](https://github.com/tornadoweb/tornado) from 6.5.7 to 6.5.8. -
+  [Changelog](https://github.com/tornadoweb/tornado/blob/master/docs/releases.rst) -
+  [Commits](https://github.com/tornadoweb/tornado/compare/v6.5.7...v6.5.8)
+
+--- updated-dependencies: - dependency-name: tornado dependency-version: 6.5.8
+
+dependency-type: indirect ...
+
+Signed-off-by: dependabot[bot] <support@github.com>
+
+### Continuous Integration
+
+- Add manual workflow dispatch to release ([#24](https://github.com/a18rhodes/NetlistIO/pull/24),
+  [`2036fef`](https://github.com/a18rhodes/NetlistIO/commit/2036fefbc80eb4027aaf876a8627bf7c8f790d45))
+
+- Automate dependabot patch/minor PR merges via CI gate
+  ([`c1ab5f9`](https://github.com/a18rhodes/NetlistIO/commit/c1ab5f9df4d2762e1ed87d9d0be3a6e32b751879))
+
+- Pin fetch-metadata to immutable SHA
+  ([`00c304e`](https://github.com/a18rhodes/NetlistIO/commit/00c304e38f2a37b96c9eb41442c0100bb91d82a1))
+
+- Use scoped PAT for semantic-release to bypass branch protection
+  ([#26](https://github.com/a18rhodes/NetlistIO/pull/26),
+  [`789b966`](https://github.com/a18rhodes/NetlistIO/commit/789b966d709d81390a089a06a169aaffab34312b))
+
+### Documentation
+
+- Correct mmap design rationale and trim readme
+  ([#22](https://github.com/a18rhodes/NetlistIO/pull/22),
+  [`4496ad9`](https://github.com/a18rhodes/NetlistIO/commit/4496ad9481c95a49c099c31c4626b62c5724d6cd))
+
+
 ## v0.1.0 (2026-06-04)
 
 ### Bug Fixes
