@@ -293,8 +293,7 @@ class CircuitGraph:
         if not HAS_PYG:
             raise ImportError(
                 "torch and torch_geometric are required for to_pyg(). "
-                "Install via: pip install torch --index-url https://download.pytorch.org/whl/cpu "
-                "&& pip install torch_geometric"
+                "Install via: poetry install --extras pyg"
             )
         inst_idx = {name: i for i, name in enumerate(sorted(self.instance_metadata))}
         net_idx = {name: i for i, name in enumerate(sorted(self.nets))}

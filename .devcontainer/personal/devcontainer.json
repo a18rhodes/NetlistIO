@@ -1,19 +1,27 @@
 {
-  "name": "${localWorkspaceFolderBasename} Dev",
+  "name": "${localWorkspaceFolderBasename} Dev (Personal)",
   "build": {
-    "dockerfile": "../Dockerfile",
-    "context": "..",
+    "dockerfile": "../../Dockerfile",
+    "context": "../..",
     "target": "development",
     "args": {
       "WORKDIR": "/workspaces/${localWorkspaceFolderBasename}",
-      // Pass "--with extra-group" to install additional dependency groups.
       "POETRY_EXTRA_ARGS": ""
     }
+  },
+  // SSH agent socket forwarded from host so git can sign commits without the
+  // private key ever entering the container. Socket path is hardcoded because
+  // VS Code leaves SSH_AUTH_SOCK empty on cold container launch (no prior WSL
+  // terminal session). See ~/dotfiles/README.md § "Devcontainer signing".
+  "mounts": [
+    "source=/run/user/1000/gnupg/S.gpg-agent.ssh,target=/run/ssh-agent.sock,type=bind"
+  ],
+  "remoteEnv": {
+    "SSH_AUTH_SOCK": "/run/ssh-agent.sock"
   },
   "containerEnv": {
     "DOTFILES_PROJECT_ROOT": "${containerWorkspaceFolder}"
   },
-  // Add project-specific setup after the &&, e.g. "&& pre-commit install"
   "postCreateCommand": "git config --global --add safe.directory ${containerWorkspaceFolder} && chmod +x scripts/setup_data.sh && ./scripts/setup_data.sh",
   "customizations": {
     "vscode": {
