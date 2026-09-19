@@ -96,10 +96,6 @@ netlistio to-pyg top.sp output.pt --subckt my_ota
 
 Use `-v` / `-vv` for verbose logging, `-q` to suppress warnings.
 
-## Status
-
-Core parser, linker, and graph builder are complete with 100% test coverage. Structural validation against ALIGN benchmark circuits (Kunal et al., DATE 2020) confirms the bipartite graph representation. Structural Verilog parser and GNN training pipeline are planned. See [docs/architecture.md](docs/architecture.md).
-
 ## License
 
 Apache 2.0. See [LICENSE](LICENSE) and [NOTICE](NOTICE).
