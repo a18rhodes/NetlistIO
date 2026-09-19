@@ -170,14 +170,14 @@ class SpiceLineParser(LineParser):
     _MODEL_PATTERN = r"^\s*(?P<delimiter>\.model)\s+(?P<name>\S+)\s+(?P<type>\S+)\s*(?P<params>.*)$"
     RE_MODEL_STR = re.compile(_MODEL_PATTERN, re.IGNORECASE | re.MULTILINE)
     RE_LIB_DIRECTIVE = re.compile(
-        rb"^\s*\.lib\s+(?:[\"'](?P<q_filename>[^\"']+)[\"']|(?P<u_filename>[^\s]+))(?:\s+(?P<section>[^\s]+))?\s*$",
+        r"^\s*\.lib\s+(?:[\"'](?P<q_filename>[^\"']+)[\"']|(?P<u_filename>[^\s]+))(?:\s+(?P<section>[^\s]+))?\s*$",
         re.IGNORECASE | re.MULTILINE,
     )
     RE_INCLUDE = re.compile(
-        rb"^\s*\.include\s+(?:[\"'](?P<q_filename>[^\"']+)[\"']|(?P<u_filename>[^\s]+))", re.IGNORECASE | re.MULTILINE
+        r"^\s*\.include\s+(?:[\"'](?P<q_filename>[^\"']+)[\"']|(?P<u_filename>[^\s]+))", re.IGNORECASE | re.MULTILINE
     )
-    RE_CADENCE_STRICT = re.compile(rb'^\s*\[\!\s*(?P<filename>[^"\]]+)\s*\]', re.IGNORECASE | re.MULTILINE)
-    RE_CADENCE_LENIENT = re.compile(rb'^\s*\[\?\s*(?P<filename>[^"\]]+)\s*\]', re.IGNORECASE | re.MULTILINE)
+    RE_CADENCE_STRICT = re.compile(r'^\s*\[\!\s*(?P<filename>[^"\]]+)\s*\]', re.IGNORECASE | re.MULTILINE)
+    RE_CADENCE_LENIENT = re.compile(r'^\s*\[\?\s*(?P<filename>[^"\]]+)\s*\]', re.IGNORECASE | re.MULTILINE)
 
     def parse_instance(self, line: str) -> Instance | None:
         """
@@ -467,56 +467,54 @@ class SpiceLineParser(LineParser):
         :param line: Logical line string.
         :return: IncludeDirective, LibraryDirective, or None.
         """
-        encoded = line.encode("utf-8")
-        if match := self.RE_INCLUDE.search(encoded):
+        if match := self.RE_INCLUDE.search(line):
             return IncludeDirective(filepath=self._extract_filename(match), source_file=self.filepath)
-        if match := self.RE_LIB_DIRECTIVE.search(encoded):
+        if match := self.RE_LIB_DIRECTIVE.search(line):
             section = self._decode_group(match, "section")
             return LibraryDirective(filepath=self._extract_filename(match), source_file=self.filepath, section=section)
-        if match := self.RE_CADENCE_STRICT.search(encoded):
+        if match := self.RE_CADENCE_STRICT.search(line):
             return IncludeDirective(
                 filepath=self._get_filepath_from_match(match), source_file=self.filepath, strict=True
             )
-        if match := self.RE_CADENCE_LENIENT.search(encoded):
+        if match := self.RE_CADENCE_LENIENT.search(line):
             return IncludeDirective(
                 filepath=self._get_filepath_from_match(match), source_file=self.filepath, strict=False
             )
         return None
 
-    def _extract_filename(self, match: re.Match[bytes]) -> str:
+    def _extract_filename(self, match: re.Match[str]) -> str:
         """
         Extracts the filename from either the quoted or unquoted capture group.
 
         :param match: Regex match containing ``q_filename`` or ``u_filename`` groups.
-        :return: Decoded filename string.
+        :return: Filename string.
         """
         if q := match.group("q_filename") if "q_filename" in match.groupdict() else None:
-            return q.decode("utf-8", errors="ignore")
+            return q
         if u := match.group("u_filename") if "u_filename" in match.groupdict() else None:
-            return u.decode("utf-8", errors="ignore")
+            return u
         return self._get_filepath_from_match(match)  # pragma: no cover
 
     @staticmethod
-    def _decode_group(match: re.Match[bytes], group: str) -> str | None:
+    def _decode_group(match: re.Match[str], group: str) -> str | None:
         """
-        Decodes an optional named group from a bytes regex match.
+        Extracts an optional named group from a str regex match.
 
         :param match: Regex match object.
         :param group: Name of the capture group.
-        :return: Decoded string, or None if the group did not participate.
+        :return: Group value, or None if the group did not participate.
         """
-        raw = match.group(group)
-        return raw.decode("utf-8", errors="ignore") if raw else None
+        return match.group(group) or None
 
     @staticmethod
-    def _get_filepath_from_match(match: re.Match[bytes]) -> str:
+    def _get_filepath_from_match(match: re.Match[str]) -> str:
         """
-        Decodes and strips quotes from the ``filename`` capture group.
+        Strips quotes from the ``filename`` capture group.
 
         :param match: Regex match containing a ``filename`` group.
         :return: Cleaned filename string.
         """
-        return match.group("filename").decode("utf-8", errors="ignore").strip("\"'")
+        return match.group("filename").strip("\"'")
 
 
 class SpiceChunkParserFactory(ChunkParserFactory):
